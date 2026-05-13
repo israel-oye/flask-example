@@ -1,5 +1,6 @@
 import os
 import json
+import threading
 from datetime import datetime, timedelta
 
 from dotenv import load_dotenv
@@ -45,6 +46,14 @@ migrate = Migrate(app, db, render_as_batch=True)
 
 with app.app_context():
     db.create_all()
+
+
+def send_mail(message: Message):
+    with app.app_context():
+        mail.send(message=message)
+
+def send_mail_background(message: Message):
+    threading.Thread(target=send_email, args=(message,)).start()
 
 
 OTP_LIFESPAN_MINUTES = 1
@@ -171,8 +180,9 @@ def register():
         )
 
         msg.html = html_text
-        mail.send(msg)
+        # mail.send(msg)
         # send_mail_async(message=msg)
+        send_mail_background(message=msg)
 
 
         session['user_being_verified'] = user.id
