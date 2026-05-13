@@ -28,9 +28,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URI")
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = "oylumi66@gmail.com"
-app.config["MAIL_PASSWORD"] = "nnfefppcqedlbiwz"
-app.config["MAIL_DEFAULT_SENDER"] = "oylumi66@gmail.com"
+app.config["MAIL_USERNAME"] = os.getenv("DEFAULT_EMAIL")
+app.config["MAIL_PASSWORD"] = os.getenv("EMAIL_PASSWORD")
+app.config["MAIL_DEFAULT_SENDER"] = os.getenv("DEFAULT_EMAIL")
 
 
 mail = Mail(app)
