@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <style>
+        body {
+            padding: 48px;
+        }
+    
+        form {
+            margin-inline: auto;
+            padding: 16px 24px;
+            width: 40%;
+            border-radius: 12px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-flow: column nowrap;
+            gap: 16px;
+        }
+
+        .error-message{
+            display: block;
+            font-family: sans-serif;
+            color: rgb(246, 63, 63);
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <form action="" method="post">
+        <h3>Register</h3>
+
+        {{form.csrf_token}}
+        
+        <div class="form-group">
+            {{form.email.label}}
+            {{form.email()}}
+            {% for error in form.email.errors %}
+                <span class="error-message">{{error}}</span>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            {{form.username.label}}
+            {{form.username()}}
+            {% for error in form.username.errors %}
+                <span class="error-message">{{error}}</span>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            {{form.password.label}}
+            {{form.password(class_="form-control")}}
+            {% for error in form.password.errors %}
+                <span class="error-message">{{error}}</span>
+            {% endfor %}
+        </div>
+        
+        
+        <input type="submit" value="Register" class="btn btn-primary">
+    </form>
+</body>
+</html>

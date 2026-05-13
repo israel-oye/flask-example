@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style>
+        form{
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+            width: 40%;
+            margin-inline: auto;
+            padding: 24px;
+        }
+        main{
+            padding: 48px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <main>
+        <form action="" method="post">
+            <h3>Verify OTP</h3>
+            <input type="text" name="token" class="form-control" placeholder="OTP">
+            <input type="submit" value="Verify">
+        </form>
+    </main>
+    
+{% endblock %}

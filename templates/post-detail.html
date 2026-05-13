@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style>
+        main{
+            padding: 24px 48px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <main>
+        <h1>{{post.title}}</h1>
+        <span>by <i><b>{{post.author.username}}</b></i></span>
+
+        <p>
+            {{post.body}}
+        </p>
+    </main>
+{% endblock %}

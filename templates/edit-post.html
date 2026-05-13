@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+    form {
+        margin-inline: auto;
+        padding: 16px 24px;
+        width: 40%;
+        border-radius: 12px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="" method="post">
+    <h3>Update Post</h3>
+    {{ form.csrf_token }}
+
+    <label for="title">Title</label>
+    {{form.title(class_='form-control')}}
+
+    <label for="body">Body</label>
+    {{form.body(class_='form-control')}}
+
+    <input type="submit" value="Add" class="btn btn-success">
+</form>
+{% endblock %}
