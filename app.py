@@ -48,12 +48,12 @@ with app.app_context():
     db.create_all()
 
 
-def send_mail(message: Message):
+def send_flaskmail(message: Message):
     with app.app_context():
         mail.send(message=message)
 
 def send_mail_background(message: Message):
-    threading.Thread(target=send_email, args=(message,)).start()
+    threading.Thread(target=send_flaskmail, args=(message,)).start()
 
 
 OTP_LIFESPAN_MINUTES = 1
