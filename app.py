@@ -182,7 +182,7 @@ def register():
                 html_content=html_text
             )
 
-            if brevo_response.status_code != 201 or brevo_response.status_code != 200:
+            if brevo_response.status_code != 201 and brevo_response.status_code != 200:
                 raise Exception
 
         except Exception as e:
