@@ -182,12 +182,12 @@ def register():
                 html_content=html_text
             )
 
-            if brevo_response.status_code != 200:
+            if brevo_response.status_code != 201 or brevo_response.status_code != 200:
                 raise Exception
+
         except Exception as e:
             flash("Account created but there was an error sending the email", category="danger")
             print("An error occured while sending", e)
-            return redirect(url_for("register"))
         else:
             session['user_being_verified'] = user.id
 
