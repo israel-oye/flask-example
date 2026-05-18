@@ -14,12 +14,13 @@ from flask_login import (
 )
 from flask_mail import Mail, Message
 from flask_migrate import Migrate
+import requests
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from db import db
 from forms import LoginForm, PostForm, RegisterForm
 from models import OTPToken, Post, User
-from utils import generate_random_otp
+from utils import generate_random_otp, send_registration_mail
 
 load_dotenv()
 
@@ -48,15 +49,7 @@ with app.app_context():
     db.create_all()
 
 
-def send_flaskmail(message: Message):
-    with app.app_context():
-        mail.send(message=message)
-
-def send_mail_background(message: Message):
-    threading.Thread(target=send_flaskmail, args=(message,)).start()
-
-
-OTP_LIFESPAN_MINUTES = 1
+OTP_LIFESPAN_MINUTES = 10
 
 @login_manager.user_loader
 def get_user(pk):
@@ -155,7 +148,7 @@ def register():
             username=username, 
             password=generate_password_hash(password)
         )
-        
+
         _new_otp = generate_random_otp(5)
         token = OTPToken(
             token=_new_otp,
@@ -165,7 +158,6 @@ def register():
 
         db.session.add_all([user, token])
         db.session.commit()
-
 
         msg = Message(
             subject=f"Verify Account: Your OTP is {_new_otp}",
@@ -182,14 +174,25 @@ def register():
         msg.html = html_text
         # mail.send(msg)
         # send_mail_async(message=msg)
-        send_mail_background(message=msg)
+        try:
+            brevo_response = send_registration_mail(
+                to=user.email,
+                username=user.username,
+                otp=_new_otp,
+                html_content=html_text
+            )
 
+            if brevo_response.status_code != 200:
+                raise Exception
+        except Exception as e:
+            flash("Account created but there was an error sending the email", category="danger")
+            print("An error occured while sending", e)
+        else:
+            session['user_being_verified'] = user.id
 
-        session['user_being_verified'] = user.id
-        
-        flash("Sign up success. Please verify your email", category="info")
-        return redirect(url_for('verify_otp'))
-    
+            flash("Sign up success. Please verify your email", category="info")
+            return redirect(url_for('verify_otp'))
+
     return render_template("register.html", form=form)
 
 
@@ -332,8 +335,6 @@ def create_post():
     return render_template("new_post.html", form=form)
 
 
-
-
 @app.get('/posts/<int:id>')
 @login_required
 def post_detail(id: int):
@@ -361,7 +362,6 @@ def delete_post(id):
     else:
         flash("Post not found", category="warning")
         return redirect(url_for("dashboard"))
-
 
 
 @app.route('/posts/edit/<id>', methods=['GET', 'POST'])
